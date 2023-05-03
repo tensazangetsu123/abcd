@@ -1,0 +1,353 @@
+#include<stdio.h>
+#include<conio.h>
+#include<graphics.h>
+#include<math.h>
+#include<iostream.h>
+void mul(float a[2][3] , float b[3][3] , float r[2][3])
+{
+for(int i=0 ; i<2 ; i++)
+for(int j=0 ; j<3 ; j++){
+r[i][j] = 0;
+for(int k=0 ; k<3 ; k++)
+r[i][j] += a[i][k]*b[k][j];
+}
+}
+void identity_matrix (float r[3][3])
+{
+for(int i=0 ; i<3 ; i++)
+for(int j=0 ; j<3 ; j++){
+if(i==j)
+r[i][j] = 1;
+else
+r[i][j] = 0;
+}
+}
+void t_matrix (float r[3][3] , int x , int y)
+{
+identity_matrix(r);
+r[2][0] = x;
+r[2][1] = y;
+}
+void r_matrix (float r[3][3] , float a)
+{
+a = 22*a/(7*180);
+identity_matrix(r);
+r[0][0]=r[1][1]=cos(a);
+r[0][1]=sin(a);
+r[1][0]=-sin(a);
+}
+void s_matrix(float r[3][3] , int x , int y)
+{
+identity_matrix(r);
+r[0][0] = x;
+r[1][1] = y;
+}
+void cartesian(int maxx , int maxy)
+{
+int midx = (int)(maxx/2);
+int midy = (int)(maxy/2);
+line(midx,10,midx,maxy);
+line(0,midy,maxx,midy);
+}
+void menu(){
+cout<<"\n\t\t\t\t\tMenu";
+cout<<"\n\t\t\t\t Press 1 : to rotate";
+cout<<"\n\t\t\t\t Prees 2 : to translate";
+cout<<"\n\t\t\t\t Press 3 : to scale";
+cout<<"\n\t\t\t\t Press 4 : to exit";
+cout<<"\n\t\t\t\t Enter your choice : ";
+}
+void head()
+{
+int x1,y1,x2,y2;
+int h,k;
+float a;
+float M[3][3];
+identity_matrix(M);
+float R1[2][3] , R2[2][3] , R3[2][3];
+int gd=DETECT,gm;
+clrscr();
+cout<<"Enter coordinates of line x1 y1 x2 y2 : ";
+cin>>x1>>y1>>x2>>y2;
+float X[2][3];
+X[0][0] = x1;
+X[0][1] = y1;
+X[0][2] = 1;
+X[1][0] = x2;
+X[1][1] = y2;
+X[1][2] = 1;
+do
+{
+initgraph(&gd,&gm,"C:\\TURBOC3\\BGI");
+int maxx = getmaxx();
+int maxy = getmaxy();
+cartesian(maxx,maxy);
+line((maxx/2)+x1,(maxy/2)-y1,(maxx/2)+x2,(maxy/2)-y2);
+getch();
+closegraph();
+clrscr();
+char ch;
+menu();
+cin>>ch;
+clrscr();
+switch(ch)
+{
+case'1':cout<<"Enter coordiantes of point of rotation x,y : ";
+cin>>h>>k;
+cout<<"enter angle of rotation in degrees : ";
+cin>>a;
+t_matrix(M,-h,-k);
+mul(X,M,R1);
+r_matrix(M,a);
+mul(R1,M,R2);
+t_matrix(M,h,k);
+mul(R2,M,R3);
+x1 = R3[0][0];
+x2 = R3[1][0];
+y1 = R3[0][1];
+y2 = R3[1][1];
+break;
+case'2':cout<<"enter x and y units you want to translate h,k: ";
+cin>>h>>k;
+t_matrix(M,h,k);
+mul(X,M,R1);
+x1 = R1[0][0];
+x2 = R1[1][0];
+y1 = R1[0][1];
+y2 = R1[1][1];
+break;
+case'3':cout<<"enter x and y scaling factor a,b: ";
+cin>>h>>k;
+s_matrix(M,h,k);
+mul(X,M,R1);
+x1 = R1[0][0];
+x2 = R1[1][0];
+y1 = R1[0][1];
+y2 = R1[1][1];
+break;
+case'4':return;
+}
+X[0][0] = x1;
+X[0][1] = y1;
+X[0][2] = 1;
+X[1][0] = x2;
+X[1][1] = y2;
+X[1][2] = 1;
+}
+while(1);
+}
+void main ()
+{
+head();
+}
+
+#include<stdio.h>
+#include<conio.h>
+#include<graphics.h>
+#include<math.h>
+#include<iostream.h>
+void mul(float a[10][4] , float b[4][4] , float r[10][4])
+{
+for(int i=0 ; i<8 ; i++)
+for(int j=0 ; j<4 ; j++){
+r[i][j] = 0;
+for(int k=0 ; k<4 ; k++)
+r[i][j] += a[i][k]*b[k][j];
+}
+for(i = 8 ; i<10 ; i++)
+for(j=0 ; j<4 ; j++)
+r[i][j] = a[i][j];
+}
+void mul1(float a[10][4] , float b[4][4] , float r[10][4])
+{
+for(int i=0 ; i<10 ; i++)
+for(int j=0 ; j<4 ; j++){
+r[i][j] = 0;
+for(int k=0 ; k<4 ; k++)
+r[i][j] += a[i][k]*b[k][j];
+}
+for(i = 8 ; i<10 ; i++)
+for(j=0 ; j<4 ; j++)
+r[i][j] = a[i][j];
+}
+void identity_matrix (float r[4][4])
+{
+for(int i=0 ; i<4 ; i++)
+for(int j=0 ; j<4 ; j++){
+if(i==j)
+r[i][j] = 1;
+else
+r[i][j] = 0;
+}
+}
+void t_matrix (float r[4][4] , int x , int y , int z)
+{
+identity_matrix(r);
+r[3][0] = x;
+r[3][1] = y;
+r[3][2] = z;
+}
+void r_matrix(float r[4][4] , float a , char c)
+{
+a = 22*a/(7*180);
+identity_matrix(r);
+if(c=='x')
+{
+r[1][1]=r[2][2]=cos(a);
+r[1][2]=sin(a);
+r[2][1]=-sin(a);
+}
+if(c=='y')
+{
+r[0][0]=r[2][2]=cos(a);
+r[0][2]=-sin(a);
+r[2][0]=sin(a);
+}
+if(c=='z')
+{
+r[0][0]=r[1][1]=cos(a);
+r[0][1]=sin(a);
+r[1][0]=-sin(a);
+}
+}
+void s_matrix(float r[4][4] , int x , int y , int z)
+{
+identity_matrix(r);
+r[0][0] = x;
+r[1][1] = y;
+r[2][2] = z;
+}
+void cartesian(int maxx , int maxy)
+{
+int midx = (int)(maxx/2);
+int midy = (int)(maxy/2);
+line(midx,10,midx,maxy);
+line(0,midy,maxx,midy);
+}
+void menu()
+{
+cout<<"\n\t\t\t\t\tMenu";
+cout<<"\n\t\t\t\t Press 1 : to rotate along x axis";
+cout<<"\n\t\t\t\t Press 2 : to rotate along y axis";
+cout<<"\n\t\t\t\t Press 3 : to rotate along z axis";
+cout<<"\n\t\t\t\t Press 4 : to rotate along arbitary axis";
+cout<<"\n\t\t\t\t Prees 5 : to translate";
+cout<<"\n\t\t\t\t Press 6 : to scale";
+cout<<"\n\t\t\t\t Press 7 : to exit";
+cout<<"\n\t\t\t\t Enter your choice : ";
+}
+void head()
+{
+float d;
+int m,n,o;
+float ang;
+float sina,cosa,sinb,cosb;
+float M[4][4];
+int gd=DETECT,gm;
+float Rf[10][4],R1[10][4],R2[10][4],R3[10][4],R4[10][4],R5[10][4],R6[10][4];
+clrscr();
+float a[10][4] =
+{{0,0,0,1},{100,0,0,1},{0,100,0,1},{100,100,0,1},{0,0,100,1},{100,0,100,1},{0,100,100,1},{100,100,100,1},{
+0 ,0,0,0},{0,0,0,0}};
+do
+{
+initgraph(&gd,&gm,"C:\\TURBOC3\\BGI");
+int maxx = getmaxx();
+int maxy = getmaxy();
+cartesian(maxx,maxy);
+line((maxx/2)+a[0][0],(maxy/2)-a[0][1],(maxx/2)+a[1][0],(maxy/2)-a[1][1]);
+line((maxx/2)+a[0][0],(maxy/2)-a[0][1],(maxx/2)+a[2][0],(maxy/2)-a[2][1]);
+line((maxx/2)+a[0][0],(maxy/2)-a[0][1],(maxx/2)+a[4][0],(maxy/2)-a[4][1]);
+line((maxx/2)+a[3][0],(maxy/2)-a[3][1],(maxx/2)+a[1][0],(maxy/2)-a[1][1]);
+line((maxx/2)+a[3][0],(maxy/2)-a[3][1],(maxx/2)+a[2][0],(maxy/2)-a[2][1]);
+line((maxx/2)+a[3][0],(maxy/2)-a[3][1],(maxx/2)+a[7][0],(maxy/2)-a[7][1]);
+line((maxx/2)+a[5][0],(maxy/2)-a[5][1],(maxx/2)+a[1][0],(maxy/2)-a[1][1]);
+line((maxx/2)+a[5][0],(maxy/2)-a[5][1],(maxx/2)+a[4][0],(maxy/2)-a[4][1]);
+line((maxx/2)+a[5][0],(maxy/2)-a[5][1],(maxx/2)+a[7][0],(maxy/2)-a[7][1]);
+line((maxx/2)+a[6][0],(maxy/2)-a[6][1],(maxx/2)+a[2][0],(maxy/2)-a[2][1]);
+line((maxx/2)+a[6][0],(maxy/2)-a[6][1],(maxx/2)+a[4][0],(maxy/2)-a[4][1]);
+line((maxx/2)+a[6][0],(maxy/2)-a[6][1],(maxx/2)+a[7][0],(maxy/2)-a[7][1]);
+getch();
+closegraph();
+clrscr();
+char ch;
+menu();
+cin>>ch;
+clrscr();
+switch(ch)
+{
+case'1':cout<<"enter angle of rotation in degrees : ";
+cin>>ang;
+r_matrix(M,ang,'x');
+mul(a,M,Rf);
+break;
+case'2':cout<<"enter angle of rotation in degrees : ";
+cin>>ang;
+r_matrix(M,ang,'y');
+mul(a,M,Rf);
+break;
+case'3':cout<<"enter angle of rotation in degrees : ";
+cin>>ang;
+r_matrix(M,ang,'z');
+mul(a,M,Rf);
+break;
+case'4':cout<<"enter coordinates of line of rotation x1 y1 z1 x2 y2 z2 : ";
+cin>>a[8][0]>>a[8][1]>>a[8][2]>>a[9][0]>>a[9][1]>>a[9][2];
+m = a[8][0];
+n = a[8][1];
+o = a[8][2];
+t_matrix(M,-m,-n,-o);
+mul1(a,M,R1);
+d = sqrt(a[9][1]*a[9][1]+a[9][2]*a[9][2]);
+sina = a[9][1]/d;
+cosa = a[9][0]/d;
+sinb = a[9][0];
+cosb = d;
+identity_matrix(M);
+M[1][1]=M[2][2]=cosa;
+M[1][2]=sina;
+M[2][1]=-sina;
+mul1(R1,M,R2);
+identity_matrix(M);
+M[0][0]=M[2][2]=cosb;
+M[0][2]=sinb;
+M[2][0]=-sinb;
+mul1(R2,M,R3);
+cout<<"enter angle of rotation in degrees : ";
+cin>>ang;
+r_matrix(M,ang,'z');
+mul(R3,M,R4);
+identity_matrix(M);
+M[0][0]=M[2][2]=cosb;
+M[0][2]=-sinb;
+M[2][0]=sinb;
+mul1(R4,M,R5);
+identity_matrix(M);
+M[1][1]=M[2][2]=cosa;
+M[1][2]=-sina;
+M[2][1]=sina;
+mul1(R5,M,R6);
+t_matrix(M,m,n,o);
+mul1(R6,M,Rf);
+case'5':cout<<"enter x and y units you want to translate m,n,o: ";
+cin>>m>>n>>o;
+t_matrix(M,m,n,o);
+mul(a,M,Rf);
+break;
+case'6':cout<<"enter x and y scaling factor a,b,c: ";
+cin>>m>>n>>o;
+s_matrix(M,m,n,o);
+mul(a,M,Rf);
+break;
+case'7':return;
+}
+for(int p=0 ; p<10 ; p++)
+for(int q=0 ; q<4 ; q++)
+a[p][q] = Rf[p][q];
+}
+while(1);
+}
+void main()
+{
+head();
+}
